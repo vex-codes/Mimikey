@@ -9,7 +9,6 @@ jobs:
   build:
     strategy:
       matrix:
-        # This tells GitHub to run this entire job twice: once on Windows, once on Mac!
         os: [windows-latest, macos-latest]
         
     runs-on: ${{ matrix.os }}
@@ -32,7 +31,7 @@ jobs:
     # --- WINDOWS COMPILATION ---
     - name: Compile for Windows
       if: matrix.os == 'windows-latest'
-      run: pyinstaller --noconsole --onefile --icon=icon.ico mimikey.py
+      run: pyinstaller --noconsole --onefile --icon=icon.ico --collect-all customtkinter mimikey.py
       
     - name: Upload Windows EXE
       if: matrix.os == 'windows-latest'
@@ -44,13 +43,11 @@ jobs:
     # --- MAC COMPILATION ---
     - name: Compile for Mac
       if: matrix.os == 'macos-latest'
-      # Mac specifically needs --windowed to create a proper .app bundle with an icon
-      run: pyinstaller --windowed --onefile --icon=icon.icns mimikey.py
+      run: pyinstaller --windowed --onefile --icon=icon.icns --collect-all customtkinter mimikey.py
       
     - name: Upload Mac App
       if: matrix.os == 'macos-latest'
       uses: actions/upload-artifact@v4
       with:
         name: Mimikey-Mac
-        # Uploads the entire .app folder bundle
         path: dist/*.app
