@@ -25,13 +25,13 @@ jobs:
     - name: Install Imports and PyInstaller
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pyinstaller
+        python -m pip install -r requirements.txt
+        python -m pip install pyinstaller
         
     # --- WINDOWS COMPILATION ---
     - name: Compile for Windows
       if: matrix.os == 'windows-latest'
-      run: pyinstaller --noconsole --onefile --icon=icon.ico --collect-all customtkinter mimikey.py
+      run: python -m PyInstaller --noconsole --onefile --icon=icon.ico --collect-all customtkinter mimikey.py
       
     - name: Upload Windows EXE
       if: matrix.os == 'windows-latest'
@@ -43,7 +43,7 @@ jobs:
     # --- MAC COMPILATION ---
     - name: Compile for Mac
       if: matrix.os == 'macos-latest'
-      run: pyinstaller --windowed --onefile --icon=icon.icns --collect-all customtkinter mimikey.py
+      run: python -m PyInstaller --windowed --onefile --icon=icon.icns --collect-all customtkinter mimikey.py
       
     - name: Upload Mac App
       if: matrix.os == 'macos-latest'
