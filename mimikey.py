@@ -219,7 +219,7 @@ class MimikeyApp(ctk.CTk):
         # 1. Input Area
         self.textbox = ctk.CTkTextbox(self.main_area, font=("Roboto Medium", 15), corner_radius=20, border_width=2)
         self.textbox.grid(row=1, column=0, sticky="nsew", padx=30, pady=(15, 20))
-        self.textbox.insert("1.0", "Paste your text or load a file...")
+        self.textbox.insert("0.0", "Paste your text or load a file...")
         self.textbox.bind("<KeyRelease>", self.calculate_estimated_time)
 
         # 2. Monitor & Controls Bar
@@ -247,7 +247,7 @@ class MimikeyApp(ctk.CTk):
         # 3. Live Action Terminal
         self.txt_log = ctk.CTkTextbox(self.frame_monitor, height=80, corner_radius=15, font=("Courier", 12), fg_color="#1e1e1e", text_color="#00ff41")
         self.txt_log.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(0, 15))
-        self.txt_log.insert("1.0", f"[{datetime.datetime.now().strftime('%H:%M:%S')}] System initialized.\n")
+        self.txt_log.insert("0.0", f"[{datetime.datetime.now().strftime('%H:%M:%S')}] System initialized.\n")
         self.txt_log.configure(state="disabled")
 
         # 4. Media Controls
@@ -314,9 +314,6 @@ class MimikeyApp(ctk.CTk):
     def toggle_pin(self):
         val = self.switch_pin.get()
         self.attributes('-topmost', val)
-        if val:
-            self.lift()
-            self.after(100, lambda: self.attributes('-topmost', True))
 
     def update_delay_label(self, value):
         self.start_delay = int(value)
@@ -329,14 +326,14 @@ class MimikeyApp(ctk.CTk):
                 with open(filename, 'r', encoding='utf-8') as f:
                     content = f.read()
                     self.clear_text()
-                    self.textbox.insert("1.0", content)
+                    self.textbox.insert("0.0", content)
                     self.calculate_estimated_time()
                     self.log_action(f"Loaded file: {os.path.basename(filename)}")
         except Exception as e:
             messagebox.showerror("Error", f"Could not load file: {e}")
 
     def clear_text(self):
-        self.textbox.delete("1.0", "end")
+        self.textbox.delete("0.0", "end")
         self.calculate_estimated_time()
         self.lbl_stats.configure(text="Est. Time: --:--")
         self.log_action("Cleared text buffer.")
@@ -344,7 +341,7 @@ class MimikeyApp(ctk.CTk):
     def calculate_estimated_time(self, event=None):
         if self.is_running: return # Use live stats while running
         
-        text = self.textbox.get("1.0", "end-1c")
+        text = self.textbox.get("0.0", "end-1c")
         if not text:
             self.lbl_stats.configure(text="Est. Time: --:--")
             return
@@ -367,7 +364,6 @@ class MimikeyApp(ctk.CTk):
             colors = THEMES[self.current_theme]
             self.lbl_wpm.configure(text=text, text_color=colors["text"])
         self.opt_preset.set("Custom")
-        self.calculate_estimated_time()
 
     def update_error_label(self, value):
         self.current_error_rate = value / 100.0
@@ -542,7 +538,7 @@ class MimikeyApp(ctk.CTk):
         return clean_text
 
     def start_typing_thread(self):
-        raw_text = self.textbox.get("1.0", "end-1c")
+        raw_text = self.textbox.get("0.0", "end-1c")
         if not raw_text: return
         
         text = self.sanitize_text(raw_text)
