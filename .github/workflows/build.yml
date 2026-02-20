@@ -41,9 +41,44 @@ jobs:
         path: dist/*.exe
 
     # --- MAC COMPILATION ---
+    - name: Install Mac Build Dependencies
+      if: matrix.os == 'macos-latest'
+      run: python -m pip install pyinstaller
+
     - name: Compile for Mac
       if: matrix.os == 'macos-latest'
-      run: python -m PyInstaller --windowed --onefile --icon=icon.icns --hidden-import customtkinter --collect-all customtkinter mimikey.py
+      run: |
+        # Generate the spec file
+        python -m PyInstaller --windowed --onefile --icon=icon.icns --hidden-import customtkinter --collect-all customtkinter --name Mimikey mimikey.py --osx-bundle-identifier=com.vedanshkumar.mimikey
+        
+        # Inject Info.plist properties into the .spec file safely using a python script
+        cat << 'EOF' > patch_spec.py
+        import re
+
+        with open('Mimikey.spec', 'r') as f:
+            content = f.read()
+
+        plist_injection = """
+        info_plist={
+            'NSAppleEventsUsageDescription': 'Mimikey needs to script Apple Events to function correctly over other apps.',
+            'NSAccessibilityUsageDescription': 'Mimikey requires Accessibility permissions to listen for global hotkeys (F9/F10) and simulate intelligent typing.',
+            'NSPrincipalClass': 'NSApplication',
+            'NSHighResolutionCapable': 'True'
+        },
+        """
+        
+        # Insert info_plist inside the app = BUNDLE(...) block
+        content = re.sub(r'(BUNDLE\(.*?)(\n\))', r'\1,\n' + plist_injection + r'\2', content, flags=re.DOTALL)
+        
+        with open('Mimikey.spec', 'w') as f:
+            f.write(content)
+        print("Spec file successfully patched with Info.plist")
+        EOF
+        
+        python patch_spec.py
+        
+        # Now run PyInstaller using the patched spec file
+        python -m PyInstaller --clean Mimikey.spec
       
     - name: Upload Mac App
       if: matrix.os == 'macos-latest'
