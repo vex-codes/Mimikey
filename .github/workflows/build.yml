@@ -67,7 +67,7 @@ jobs:
         },
         """
 
-        content = re.sub(r'(BUNDLE\(.*?)(\n\))', r'\1,\n' + plist_injection + r'\2', content, flags=re.DOTALL)
+        content = re.sub(r'(BUNDLE\(.*?)(\n\))', r'\1\n' + plist_injection + r'\2', content, flags=re.DOTALL)
 
         with open('Mimikey.spec', 'w') as f:
             f.write(content)
