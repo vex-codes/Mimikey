@@ -97,7 +97,8 @@ class MimikeyApp(ctk.CTk):
         self.current_theme = "Cyber" 
 
         self.setup_ui()
-        self.start_hotkey_listener()
+        
+        self.after(1000, self.start_hotkey_listener)
         
         # Load Settings (Overrides Defaults)
         self.load_settings()
