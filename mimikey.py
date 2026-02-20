@@ -97,6 +97,7 @@ class MimikeyApp(ctk.CTk):
         self.current_theme = "Cotton Candy" 
 
         self.setup_ui()
+        self.apply_theme(self.current_theme)
         self.start_hotkey_listener()
         
         # Load Settings (Overrides Defaults)
@@ -218,7 +219,7 @@ class MimikeyApp(ctk.CTk):
         # 1. Input Area
         self.textbox = ctk.CTkTextbox(self.main_area, font=("Roboto Medium", 15), corner_radius=20, border_width=2)
         self.textbox.grid(row=1, column=0, sticky="nsew", padx=30, pady=(15, 20))
-        self.textbox.insert("0.0", "Paste your text or load a file...")
+        self.textbox.insert("1.0", "Paste your text or load a file...")
         self.textbox.bind("<KeyRelease>", self.calculate_estimated_time)
 
         # 2. Monitor & Controls Bar
@@ -246,7 +247,7 @@ class MimikeyApp(ctk.CTk):
         # 3. Live Action Terminal
         self.txt_log = ctk.CTkTextbox(self.frame_monitor, height=80, corner_radius=15, font=("Courier", 12), fg_color="#1e1e1e", text_color="#00ff41")
         self.txt_log.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(0, 15))
-        self.txt_log.insert("0.0", f"[{datetime.datetime.now().strftime('%H:%M:%S')}] System initialized.\n")
+        self.txt_log.insert("1.0", f"[{datetime.datetime.now().strftime('%H:%M:%S')}] System initialized.\n")
         self.txt_log.configure(state="disabled")
 
         # 4. Media Controls
@@ -328,14 +329,14 @@ class MimikeyApp(ctk.CTk):
                 with open(filename, 'r', encoding='utf-8') as f:
                     content = f.read()
                     self.clear_text()
-                    self.textbox.insert("0.0", content)
+                    self.textbox.insert("1.0", content)
                     self.calculate_estimated_time()
                     self.log_action(f"Loaded file: {os.path.basename(filename)}")
         except Exception as e:
             messagebox.showerror("Error", f"Could not load file: {e}")
 
     def clear_text(self):
-        self.textbox.delete("0.0", "end")
+        self.textbox.delete("1.0", "end")
         self.calculate_estimated_time()
         self.lbl_stats.configure(text="Est. Time: --:--")
         self.log_action("Cleared text buffer.")
@@ -483,6 +484,21 @@ class MimikeyApp(ctk.CTk):
             
         self.after(0, _log)
 
+    def safe_status(self, text, fg_color=None):
+        def _update():
+            self.status_capsule.configure(text=text)
+            if fg_color: self.status_capsule.configure(fg_color=fg_color)
+        self.after(0, _update)
+
+    def safe_progress(self, pct, time_str):
+        def _update():
+            self.progress_bar.set(pct)
+            self.lbl_stats.configure(text=time_str)
+        self.after(0, _update)
+
+    def safe_ui_state(self, state):
+        self.after(0, lambda: self.update_ui_state(state))
+
 
     # --- Hotkeys & Threading ---
 
@@ -609,12 +625,12 @@ class MimikeyApp(ctk.CTk):
         self.log_action(f"Counting down {self.start_delay}s...")
         for i in range(self.start_delay, 0, -1):
             if self.stop_event.is_set(): 
-                self.update_ui_state("stopped")
+                self.safe_ui_state("stopped")
                 return
-            self.status_capsule.configure(text=f" T-{i}s ")
+            self.safe_status(f" T-{i}s ")
             time.sleep(1)
 
-        self.status_capsule.configure(text=" TYPING ", fg_color=THEMES[self.current_theme]["accent"])
+        self.safe_status(" TYPING ", THEMES[self.current_theme]["accent"])
         self.log_action("Typing started.")
         self.release_modifiers()
         time.sleep(0.5)
@@ -642,7 +658,7 @@ class MimikeyApp(ctk.CTk):
 
                 # --- 1. Major Break ---
                 if chars_typed >= major_break_threshold:
-                    self.status_capsule.configure(text=" THINKING ", fg_color="orange")
+                    self.safe_status(" THINKING ", "orange")
                     self.log_action("Simulating human pause (thinking)...")
                     duration = random.uniform(8, 15)
                     try:
@@ -654,24 +670,24 @@ class MimikeyApp(ctk.CTk):
                     except: time.sleep(duration)
                     chars_typed = 0
                     major_break_threshold = random.randint(200, 500)
-                    self.status_capsule.configure(text=" TYPING ", fg_color=THEMES[self.current_theme]["accent"])
+                    self.safe_status(" TYPING ", THEMES[self.current_theme]["accent"])
 
                 # --- 2. Wandering Cursor ---
                 if i > 0 and i % wandering_threshold == 0:
-                     self.status_capsule.configure(text=" NAVIGATING ", fg_color="purple")
+                     self.safe_status(" NAVIGATING ", "purple")
                      self.log_action("Cursor wandering...")
                      steps = random.randint(5, 10)
                      self.rapid_nav_press('up', steps)
                      time.sleep(random.uniform(1.0, 2.0))
                      self.rapid_nav_press('down', steps)
                      wandering_threshold = random.randint(600, 900)
-                     self.status_capsule.configure(text=" TYPING ", fg_color=THEMES[self.current_theme]["accent"])
+                     self.safe_status(" TYPING ", THEMES[self.current_theme]["accent"])
 
                 # --- 3. Delayed Corrections (O(1) Lookup) ---
                 if i in pending_corrections:
                     correction = pending_corrections[i] # Pop logic later to keep safe? Dictionary is safe.
                     
-                    self.status_capsule.configure(text=" FIXING ", fg_color="red")
+                    self.safe_status(" FIXING ", "red")
                     self.log_action(f"Navigating back to fix '{correction['wrong_char']}' -> '{correction['correct_char']}'")
                     time.sleep(0.3) 
                     
@@ -686,7 +702,7 @@ class MimikeyApp(ctk.CTk):
                     
                     del pending_corrections[i] # Remove done correction
                     time.sleep(0.3)
-                    self.status_capsule.configure(text=" TYPING ", fg_color=THEMES[self.current_theme]["accent"])
+                    self.safe_status(" TYPING ", THEMES[self.current_theme]["accent"])
 
                 # --- 4. Typing & Context Errors & Typos ---
                 typed_char = char
@@ -759,35 +775,33 @@ class MimikeyApp(ctk.CTk):
                 now = time.time()
                 if now - self.last_ui_update_time >= 0.1:
                     pct = (i + 1) / total_chars
-                    self.progress_bar.set(pct)
                     rem_chars = total_chars - (i + 1)
                     est_sec = rem_chars * delay
                     mins, secs = divmod(int(est_sec), 60)
-                    self.lbl_stats.configure(text=f"Time Remaining: {mins:02}:{secs:02}")
+                    self.safe_progress(pct, f"Time Remaining: {mins:02}:{secs:02}")
                     self.last_ui_update_time = now
 
             for trigger, correction in pending_corrections.items():
                 if self.stop_event.is_set(): break
-                self.status_capsule.configure(text=" CLEANUP ")
+                self.safe_status(" CLEANUP ")
                 self.log_action(f"Cleanup: fixing missed typo '{correction['wrong_char']}'")
                 self.rapid_nav_press('left', (len(text)-correction['error_index']-1))
                 pyautogui.press('backspace')
                 pyautogui.write(correction['correct_char'])
                 self.rapid_nav_press('right', (len(text)-correction['error_index']-1))
 
-            self.update_ui_state("stopped")
-            self.status_capsule.configure(text=" DONE ", fg_color="#2CC985")
-            self.progress_bar.set(1.0)
-            self.lbl_stats.configure(text="Time Remaining: 00:00")
+            self.safe_ui_state("stopped")
+            self.safe_status(" DONE ", "#2CC985")
+            self.safe_progress(1.0, "Time Remaining: 00:00")
             self.log_action("Typing complete.")
 
         except pyautogui.FailSafeException:
-            self.update_ui_state("stopped")
-            self.status_capsule.configure(text=" FAILSAFE ", fg_color="red")
+            self.safe_ui_state("stopped")
+            self.safe_status(" FAILSAFE ", "red")
             self.log_action("Emergency Failsafe Triggered!")
         except Exception as e:
             self.log_action(f"Error: {e}")
-            self.update_ui_state("stopped")
+            self.safe_ui_state("stopped")
 
 if __name__ == "__main__":
     app = MimikeyApp()
