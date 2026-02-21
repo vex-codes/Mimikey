@@ -43,5 +43,5 @@ Since Mimikey interacts heavily with your OS, it is distributed as a raw Python 
 
 **1. Clone the repository**
 ```bash
-git clone [https://github.com/YOUR_USERNAME/mimikey.git](https://github.com/YOUR_USERNAME/mimikey.git)
+git clone https://github.com/vex-codes/Mimikey.git
 cd mimikey
