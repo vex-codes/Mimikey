@@ -3,7 +3,6 @@
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.10-pink.svg?style=for-the-badge&logo=python">
   <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue.svg?style=for-the-badge">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge">
 </div>
 
 > **A cozy, open-source, and hyper-realistic human typing simulator.** 🎀
