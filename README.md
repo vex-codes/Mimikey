@@ -1,6 +1,12 @@
-# 🖱️✨ Mimikey
+# 🖱️✨ Mimikey 
 
-> **A cozy, aesthetic, and hyper-realistic human typing simulator.** 🎀
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.10-pink.svg?style=for-the-badge&logo=python">
+  <img src="https://img.shields.io/badge/Platform-macOS%20%7C%20Windows-blue.svg?style=for-the-badge">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge">
+</div>
+
+> **A cozy, open-source, and hyper-realistic human typing simulator.** 🎀
 
 Mimikey is a premium desktop application designed to bypass detection by perfectly simulating human keystrokes. Whether you are pasting a long essay or a quick paragraph, Mimikey types it out for you with realistic delays, natural typos, and self-correcting behavior. 
 
@@ -8,48 +14,35 @@ Forget clunky, robotic macro scripts. Mimikey feels alive, looks beautiful, and 
 
 ---
 
+### 📸 See it in Action
+*(Drop an animated GIF of Mimikey typing here! Just drag and drop the `.gif` file into this GitHub editor and it will generate the link)*
+
+---
+
+## 🕵️‍♂️ The "Not a Keylogger" Transparency Note
+Let's address the elephant in the room: **Mimikey requires low-level keyboard permissions.** Because this app uses global hotkeys (allowing you to pause/start the typing even when the app is minimized), it requires system-level keyboard monitoring. **Mimikey does not log, save, or transmit your keystrokes.** The code is completely open-source so you can verify exactly how your data is handled. 
+
+### 🛡️ Required OS Permissions
+To run this script, your operating system will ask for the following:
+* **🍎 macOS:** You must grant your Terminal (or VS Code) **Accessibility** and **Input Monitoring** permissions in `System Settings > Privacy & Security`. This allows the script to physically simulate pressing the keys and listen for the emergency stop hotkey.
+* **🪟 Windows:** You may need to run your command prompt as **Administrator** so the script can interface with the Windows keyboard API without being blocked by Windows Defender.
+
+---
+
 ## 🌸 Features
-
 * **🧠 Smart Humanization Engine:** Simulates realistic delays based on punctuation, key travel distance, and fatigue.
-* **Oops... Typos:** Occasionally hits the wrong adjacent key and physically navigates back to fix it (just like a real person!).
-* **🎯 Perfectionism Slider:** Decide if the bot catches 100% of its mistakes, or if it intentionally leaves a few behind for maximum realism.
+* **Oops... Typos:** Occasionally hits the wrong adjacent key and physically navigates back to fix it.
+* **🎯 Perfectionism Slider:** Decide if the bot catches 100% of its mistakes, or if it intentionally leaves a few behind.
 * **💻 Live Action Terminal:** Watch the bot's internal monologue in real-time as it thinks, wanders, and fixes errors.
-* **🎨 6 Aesthetic Themes:** Match your vibe with beautifully crafted dark and pastel themes (including *Cotton Candy* and *Dracula*).
-* **📌 Always on Top:** Pin Mimikey to your screen so you can monitor progress while working in other windows.
-* **📂 File Import:** Easily load `.txt` files instead of copying and pasting massive blocks of text.
+* **🎨 6 Aesthetic Themes:** Boots up in *Cotton Candy* default, with options like *Dracula*, *Matrix*, and *Cyber*.
 
 ---
 
-## 🎀 Themes Included
+## 🚀 Installation & Setup
 
-Mimikey comes with a built-in theme engine to keep your desktop looking fresh:
-* 🌿 **Jungle** (Deep greens and golds)
-* 🌐 **Cyber** (Neon teals and dark ink)
-* 🍂 **Spice** (Warm ambers and chocolate)
-* 🍬 **Cotton Candy** (Soft pinks and pastel greys)
-* 💻 **Matrix** (Hacker green and pitch black)
-* 🧛 **Dracula** (Classic developer purples and dark greys)
+Since Mimikey interacts heavily with your OS, it is distributed as a raw Python script so you can verify the source code.
 
----
-
-## 🚀 How to Download & Use
-
-You don't need to know how to code to use Mimikey! Standalone apps are available for both Windows and Mac.
-
-1.  Navigate to the **[Releases](#)** or **Actions** tab in this repository.
-2.  Download the latest version for your operating system (`Mimikey.exe` for Windows, or `Mimikey.app` for Mac).
-3.  Open the app, paste your text (or load a file), and hit **Start**.
-4.  *Pro-tip:* Use **F9** to instantly start/pause the typing from anywhere on your computer!
-
----
-
-## ⚙️ Built With
-
-* **Python 3.10**
-* **CustomTkinter** - For the beautiful, rounded, modern UI.
-* **PyAutoGUI & Pynput** - For deep-level keyboard control and global hotkeys.
-* **GitHub Actions** - For automated, cross-platform cloud compilation.
-
----
-
-*Created with 💖 and a lot of coffee.*
+**1. Clone the repository**
+```bash
+git clone [https://github.com/YOUR_USERNAME/mimikey.git](https://github.com/YOUR_USERNAME/mimikey.git)
+cd mimikey
