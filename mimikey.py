@@ -130,7 +130,7 @@ class MimikeyApp(ctk.CTk):
         self.lbl_brand = ctk.CTkLabel(self.sidebar, text="Mimikey", font=("Roboto Medium", 28, "bold"))
         self.lbl_brand.grid(row=0, column=0, padx=25, pady=(20, 5), sticky="w")
         
-        self.lbl_subtitle = ctk.CTkLabel(self.sidebar, text="Humanize Your Text", font=("Roboto Medium", 14))
+        self.lbl_subtitle = ctk.CTkLabel(self.sidebar, text="Mimics a Human Typing", font=("Roboto Medium", 14))
         self.lbl_subtitle.grid(row=1, column=0, padx=27, pady=(0, 15), sticky="w")
 
         # Dropdowns
