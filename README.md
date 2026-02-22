@@ -14,7 +14,6 @@ Forget clunky, robotic macro scripts. Mimikey feels alive, looks beautiful, and 
 ---
 
 ### 📸 Preview
-*(Drop an animated GIF of Mimikey typing here! Just drag and drop the `.gif` file into this GitHub editor and it will generate the link)*
 ![Screen Recording 2026-02-21 at 6 17 16 PM](https://github.com/user-attachments/assets/6f4f59d9-2df0-4eb7-b3c4-bbb4be2e388f)
 
 ---
