@@ -13,7 +13,7 @@ Forget clunky, robotic macro scripts. Mimikey feels alive, looks beautiful, and 
 
 ---
 
-### 📸 See it in Action
+### 📸 Preview
 *(Drop an animated GIF of Mimikey typing here! Just drag and drop the `.gif` file into this GitHub editor and it will generate the link)*
 
 ---
